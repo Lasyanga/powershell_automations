@@ -1,0 +1,2 @@
+D:\Work_related\lstv_xampp\htdocs\lstv_workspace\onedb_release2
+D:\Work_related\lstv_xampp\htdocs\lstv_workspace\onedb_development2
