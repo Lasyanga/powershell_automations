@@ -33,8 +33,9 @@ $repo = $projects[[int]$projChoice - 1]
 Write-Host "`n--- Select Git Search Mode ---" -ForegroundColor Cyan
 Write-Host "[1] Search Commit Message (--grep)"
 Write-Host "[2] Specific Commit Hash or Range (e.g., a1b2c3d or HEAD~1..HEAD)"
+Write-Host "[3] Search by Author (name or email)"
 
-$modeChoice = Read-Host "Select mode (1-2)"
+$modeChoice = Read-Host "Select mode (1-3)"
 $searchTerm = ""
 $gitArgs = @("-C", $repo, "log", "--name-only", "--pretty=format:")
 
@@ -42,12 +43,19 @@ switch ($modeChoice) {
     "1" {
         $searchTerm = Read-Host "Enter grep term (e.g., B3814)"
         if ([string]::IsNullOrWhiteSpace($searchTerm)) { Write-Error "Grep term required."; exit 1 }
+        $gitArgs += "-i"
         $gitArgs += "--grep=$searchTerm"
     }
     "2" {
         $searchTerm = Read-Host "Enter Commit Hash or Range (e.g., 7a8f9b2 or main..feature)"
         if ([string]::IsNullOrWhiteSpace($searchTerm)) { Write-Error "Commit identifier required."; exit 1 }
         $gitArgs += $searchTerm
+    }
+    "3" {
+        $searchTerm = Read-Host "Enter author name or email (e.g., jdoe or jdoe@company.com)"
+        if ([string]::IsNullOrWhiteSpace($searchTerm)) { Write-Error "Author search term required."; exit 1 }
+        $gitArgs += "-i"
+        $gitArgs += "--author=$searchTerm"
     }
     default {
         Write-Error "Invalid mode selected."

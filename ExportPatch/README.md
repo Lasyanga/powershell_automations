@@ -49,8 +49,9 @@ The script walks you through these steps:
 
 1. **Select Project Repository** — shows the numbered list of repositories from the config file; enter the number of the repository to export from.
 2. **Select Git Search Mode** — choose one of:
-   - **`[1] Search Commit Message (--grep)`** — finds commits whose message contains the term (e.g., a ticket number like `B3814`); exports all files changed by matching commits.
+   - **`[1] Search Commit Message (--grep)`** — finds commits whose message contains the term (e.g., a ticket number like `B3814`); case-insensitive, so `b3814` and `B3814` match the same commits. Exports all files changed by matching commits.
    - **`[2] Specific Commit Hash or Range`** — exports files changed by a single commit (e.g., `7a8f9b2`) or a revision range (e.g., `HEAD~1..HEAD` or `main..feature`).
+   - **`[3] Search by Author (name or email)`** — finds commits by a matching author name or email fragment (e.g., `jdoe` or `jdoe@company.com`); also case-insensitive.
 3. **Destination Folder** — press **Enter** to use the default
    `%USERPROFILE%\Desktop\hosting_patch\<search-term>`, or type a custom path.
    The search term is sanitized for use in the folder name (invalid filename characters are replaced with `_`).
@@ -69,7 +70,8 @@ Select project number (1-2): 1
 --- Select Git Search Mode ---
 [1] Search Commit Message (--grep)
 [2] Specific Commit Hash or Range (e.g., a1b2c3d or HEAD~1..HEAD)
-Select mode (1-2): 1
+[3] Search by Author (name or email)
+Select mode (1-3): 1
 Enter grep term (e.g., B3814): B3814
 
 Default Destination: C:\Users\Gil\Desktop\hosting_patch\B3814
@@ -95,7 +97,7 @@ Archive     : C:\Users\Gil\Desktop\hosting_patch\B3814.zip
 
 1. Loads and validates the repository list from the config file.
 2. Asks which repository, search mode, and search term/commit to use.
-3. Runs `git log --name-only --pretty=format:` with `--grep=<term>` (mode 1) or the commit/range argument (mode 2) to list changed files. Duplicates are removed.
+3. Runs `git log --name-only --pretty=format:` with `--grep=<term>` and `-i` (mode 1), `--author=<term>` and `-i` (mode 3), or the commit/range argument (mode 2) to list changed files. Duplicates are removed.
 4. Copies each changed file into the destination folder, recreating the relative directory structure (`<dest>\<relative-path>`).
    - Files that were **deleted** in the commits (or are otherwise missing on disk) are skipped and counted in the summary.
 5. Optionally creates a `.zip` archive:
